@@ -21,3 +21,16 @@
 * Support functions needed by the compiler/language should limited to a single
     subpackage
 
+## Subpackages
+
+```
+lime
+├── http
+│   ├── tls
+│   ├── net
+│   │   ├── base
+│   │   │   ├── crt (compiler runtime)
+│   │   │   │   ├── platform
+│   │   │   │   │   ├── system/sycall
+│   │   │   │   │   │   ├── core
+```
