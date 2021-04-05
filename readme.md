@@ -21,7 +21,7 @@
 * Support functions needed by the compiler/language should limited to a single
     subpackage
 
-## Subpackages
+## Dub Subpackages
 
 ```
 lime
@@ -34,3 +34,42 @@ lime
 │   │   │   │   │   ├── system/sycall
 │   │   │   │   │   │   ├── core
 ```
+
+### core
+
+#### Contains
+
+* `Result` type
+* `Optional` type
+* `assert` implementation
+
+#### Guidelines
+
+* No external dependencies
+* No platform specific code
+* No syscalls
+* No inline assembly
+* No functions without a body
+
+### system
+
+#### Contains
+
+* Raw system call wrappers
+* System call wrappers that:
+    * Converts error codes to `Result`
+    * Converts pointers to arrays
+
+#### Guidelines
+
+* One package per platform
+
+### platform
+
+#### Contains
+
+* All platform specific cod
+
+#### Guidelines
+
+* One package per platform
