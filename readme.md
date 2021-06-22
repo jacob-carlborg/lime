@@ -68,7 +68,7 @@ lime
 
 #### Contains
 
-* All platform specific cod
+* All platform specific code
 
 #### Guidelines
 
