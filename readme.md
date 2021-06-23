@@ -54,6 +54,7 @@ lime
 │   │   │   │   ├── platform
 │   │   │   │   │   ├── system/sycall
 │   │   │   │   │   │   ├── core
+│   │   │   │   │   │   │   ├── config
 ```
 
 ### core
