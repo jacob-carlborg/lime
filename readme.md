@@ -21,6 +21,27 @@
 * Support functions needed by the compiler/language should limited to a single
     subpackage
 
+## Potential Platforms
+
+| Operating System | x86-64 | x86 | ARM64 | ARM | PowerPC 64 | S390x |
+|------------------|--------|-----|-------|-----|------------|-------|
+| macOS            | ✓      |     |       |     |            |       |
+| iOS              |        |     | ✓     |     |            |       |
+| Linux            | ✓      | ✓   | ✓     | ✓   | ✓          | ✓     |
+| Windows          | ✓      | ✓   |       |     |            |       |
+| FreeBSD          | ✓      |     |       |     |            |       |
+| OpenBSD          | ✓      |     |       |     |            |       |
+
+These are the potentially supported platforms. It should be fairly easy to
+setup CI for these. x86-64 and iOS ARM64 will be native. All other
+architectures will be using emulation. Docker supports all of the above
+architectures, therefore it should be easy to setup these running Linux. iOS
+will be running Bitrise. All other platforms will be running GitHub Actions.
+x86-64 will be running natively using GitHub Actions. Other architectures on
+Linux will be running using Docker and its bundled QEMU support. FreeBSD and
+OpenBSD will be running using the [Cross Platform
+Action](https://github.com/cross-platform-actions/action).
+
 ## Dub Subpackages
 
 ```
