@@ -1,0 +1,19 @@
+name "config"
+description "Configuration for Lime"
+authors "Jacob Carlborg"
+copyright "Copyright © 2021, Jacob Carlborg"
+license "BSL-1.0"
+
+targetType "sourceLibrary"
+
+preGenerateCommands `
+  "$${DUB_EXE}" \
+  --arch="$${DUB_ARCH}" \
+  --compiler="$${DC}" \
+  --single resources/setup_plugins_overrides.d
+ ` platform="posix"
+
+preGenerateCommands `"%DUB_EXE%" --arch="%DUB_ARCH%" --compiler="%DC%" --single resources/setup_plugins_overrides.d` platform="windows"
+
+stringImportPaths "temp"
+dflags "-preview=shortenedMethods" "@$PACKAGE_DIR/temp/flags"

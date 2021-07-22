@@ -1,0 +1,8 @@
+name "plugin_package"
+description "A minimal D application."
+authors "Jacob Carlborg"
+copyright "Copyright © 2021, Jacob Carlborg"
+license "BSL-1.0"
+
+targetType "sourceLibrary"
+dependency "lime:config" path="../../../../.."

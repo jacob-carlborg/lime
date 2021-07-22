@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/test_override
+test_override.so
+test_override.dylib
+test_override.dll
+test_override.a
+test_override.lib
+test_override-test-*
+*.exe
+*.o
+*.obj
+*.lst

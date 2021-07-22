@@ -1,0 +1,11 @@
+name "lime"
+description "New standard library and runtime for D."
+authors "Jacob Carlborg"
+copyright "Copyright © 2021, Jacob Carlborg"
+license "BSL-1.0"
+
+dependency ":config" version="*"
+
+subPackage "config"
+
+targetType "sourceLibrary"

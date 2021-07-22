@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/lime
+lime.so
+lime.dylib
+lime.dll
+lime.a
+lime.lib
+lime-test-*
+script
+*.exe
+*.o
+*.obj
+*.lst

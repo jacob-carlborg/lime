@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/plugin_package
+plugin_package.so
+plugin_package.dylib
+plugin_package.dll
+plugin_package.a
+plugin_package.lib
+plugin_package-test-*
+*.exe
+*.o
+*.obj
+*.lst

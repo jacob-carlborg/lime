@@ -1,0 +1,7 @@
+name "test_override"
+description "A minimal D application."
+authors "Jacob Carlborg"
+copyright "Copyright © 2021, Jacob Carlborg"
+license "BSL-1.0"
+
+dependency "plugin_package" path="./plugin_package"
