@@ -3,6 +3,7 @@ docs.json
 __dummy.html
 docs/
 /test_plugin
+/temp
 test_plugin.so
 test_plugin.dylib
 test_plugin.dll

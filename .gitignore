@@ -14,3 +14,4 @@ script
 *.o
 *.obj
 *.lst
+test_runner.sh

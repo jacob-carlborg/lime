@@ -3,6 +3,7 @@ docs.json
 __dummy.html
 docs/
 /test_override
+/temp
 test_override.so
 test_override.dylib
 test_override.dll
