@@ -79,7 +79,7 @@ string targetName(string workDirectory) =>
 
 string limeConfigPath(string workDirectory)
 {
-    immutable output = execute(["dub", "describe"], workDirectory);
+    immutable output = execute(["dub", "describe", "--verror"], workDirectory);
     immutable json = parseJSON(output);
 
     immutable limeConfigPackage = json["packages"]
@@ -108,14 +108,22 @@ void saveLimeConfigTemporaryFiles(string limeConfigPath, string workDirectory)
 
 string getDubDataList(string dataValue, string workDirectory)
 {
-    immutable args = ["dub", "describe", "--data", dataValue, "--data-list"];
+    immutable args = [
+        "dub",
+        "describe",
+        "--verror",
+        "--data",
+        dataValue,
+        "--data-list"
+    ];
+
     return execute(args, workDirectory).splitLines.front;
 }
 
 string getDubData(const string[] dataValues, string workDirectory)
 {
     const dataArgs = dataValues.map!(e => ["--data", e]).joiner.array;
-    return execute(["dub", "describe"] ~ dataArgs, workDirectory);
+    return execute(["dub", "describe", "--verror"] ~ dataArgs, workDirectory);
 }
 
 string execute(const string[] args, string workDirectory)

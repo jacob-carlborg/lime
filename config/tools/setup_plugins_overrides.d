@@ -8,8 +8,8 @@ void main()
 {
     const rootPackageDir = environment["DUB_ROOT_PACKAGE_DIR"];
     const dubExe = environment["DUB_EXE"];
-    const result = execute([dubExe, "describe"], null, Config.none, size_t.max,
-        rootPackageDir);
+    const result = execute([dubExe, "describe", "--verror"], null, Config.none,
+        size_t.max, rootPackageDir);
     enforce(result.status == 0);
 
     auto json = parseJSON(result.output);
