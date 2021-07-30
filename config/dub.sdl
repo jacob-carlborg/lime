@@ -10,10 +10,10 @@ preGenerateCommands `
   "$${DUB_EXE}" \
   --arch="$$(echo "$$DUB_ARCH" | sed -r 's/ .+//g')" \
   --compiler="$${DC}" \
-  --single resources/setup_plugins_overrides.d
+  --single tools/setup_plugins_overrides.d
  ` platform="posix"
 
-preGenerateCommands `"%DUB_EXE%" --arch="%DUB_ARCH:* =%" --compiler="%DC%" --single resources/setup_plugins_overrides.d` platform="windows"
+preGenerateCommands `"%DUB_EXE%" --arch="%DUB_ARCH:* =%" --compiler="%DC%" --single tools/setup_plugins_overrides.d` platform="windows"
 
 stringImportPaths "temp"
 dflags "-preview=shortenedMethods" "@$PACKAGE_DIR/temp/flags" "-mixin=$PACKAGE_DIR/temp/mixin.d"

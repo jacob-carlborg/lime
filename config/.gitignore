@@ -4,7 +4,7 @@ __dummy.html
 docs/
 /config
 /temp
-/resources/setup_plugins_overrides
+/tools/setup_plugins_overrides
 config.so
 config.dylib
 config.dll
