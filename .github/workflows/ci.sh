@@ -10,8 +10,7 @@ print_d_compiler_version() {
 }
 
 run_tests() {
-  DC="${DMD}" ./test.sh
-  # dub test --verror --compiler="${DMD}" --arch="${LIME_ARCH}"
+  DC="${DMD}" ./test.sh --verbose
 }
 
 install_compiler
