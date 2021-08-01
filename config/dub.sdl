@@ -8,7 +8,7 @@ targetType "sourceLibrary"
 
 preGenerateCommands `
   "$${DUB_EXE}" \
-  --arch="$$(echo "$$DUB_ARCH" | sed -r 's/ .+//g')" \
+  --arch="$$(echo "$$DUB_ARCH" | sed -E 's/ .+//g')" \
   --compiler="$${DC}" \
   --single tools/setup_plugins_overrides.d
  ` platform="posix"

@@ -42,7 +42,7 @@ auto locatePlugins(JSONValue[] dubPackages)
             .dirEntries("{*.d,di}", SpanMode.depth)
             .map!(e => e[path.length + 1 .. $])
             .map!stripExtension
-            .map!(e => e.replace("/", "."));
+            .map!pathSeparatorToPeriod;
     }
 
     return dubPackages
@@ -64,7 +64,7 @@ auto locateOverrides(JSONValue[] dubPackages)
         return path
             .dirEntries("{*.d,di}", SpanMode.depth)
             .map!stripExtension
-            .map!(e => e.replace("/", "."))
+            .map!pathSeparatorToPeriod
             .map!(e => e[path.length - name.length .. $])
             .map!(e => e[name.length + 1 .. $] ~ ":" ~ e);
     }
@@ -94,4 +94,9 @@ auto generateFlags(JSONValue[] dubPackages)
 void writeFile(Range)(string name, Range data)
 {
     std.file.write(name, data.join("\n"));
+}
+
+string pathSeparatorToPeriod(string value)
+{
+    return value.replace("/", ".").replace(`\`, ".");
 }
