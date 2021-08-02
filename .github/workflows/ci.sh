@@ -5,14 +5,29 @@ set -o pipefail
 
 . ./tools/install_dc.sh
 
-print_d_compiler_version() {
-  "${DMD}" --version
-}
+if [ -z ${LIME_CROSS_COMPILE} ]; then
+  cross_compile=false
+else
+  cross_compile=true
+fi
 
 run_tests() {
-  DC="${DMD}" ./test.sh --verbose
+  local extra_args=""
+
+  if "$cross_compile"; then
+    ./test.sh --verbose link
+    extra_args="run"
+  fi
+
+  ./test.sh --verbose "$extra_args"
 }
 
-install_compiler
-print_d_compiler_version
+install_dc() {
+  if ! "$cross_compile"; then
+    install_compiler
+    print_d_compiler_version
+  fi
+}
+
+install_dc
 run_tests

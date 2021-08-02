@@ -1,6 +1,6 @@
 import lime.config.config;
 
-void main()
+extern (C) void main()
 {
     assert(config.foo.bar == 4);
 }

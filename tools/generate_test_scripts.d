@@ -1,3 +1,8 @@
+/+
+dub.sdl:
+    name "generate_test_scripts"
+    dflags "-preview=shortenedMethods"
++/
 import std;
 
 void main()
@@ -8,13 +13,23 @@ void main()
 
 private:
 
+immutable struct Commands
+{
+    string compile;
+    string link;
+    string run;
+}
+
 void generateTestScript(string path)
 {
-    enum defaultFlags = [
+    immutable defaultFlags = [
+        "-c",
         "-debug",
         "-g",
-        "-w",
-        "-vcolumns"
+        "-fPIC",
+        "-vcolumns",
+        "--mtriple",
+        target
     ];
 
     immutable workDirectory = path.dirName;
@@ -23,16 +38,30 @@ void generateTestScript(string path)
     immutable fullTargetPath = targetPath ~ targetName;
     immutable flags = .flags(workDirectory);
     immutable limeConfigPath = .limeConfigPath(workDirectory);
+    immutable objectTargetPath = fullTargetPath.setExtension(objectFileExtension);
 
     immutable compileCommand = join(
-        `"$DC"` ~
+        `"$DMD"` ~
         defaultFlags ~
-        ("-of" ~ fullTargetPath) ~
+        ("-of" ~ objectTargetPath) ~
         flags,
-        " \\\n"
+        " \\\n    "
     );
 
-    immutable content = testScript(compileCommand, fullTargetPath, limeConfigPath);
+    immutable linkCommand = [
+        "cc",
+        objectTargetPath,
+        "-o",
+        fullTargetPath
+    ].join(" \\\n  ");
+
+    Commands commands = {
+        compile: compileCommand,
+        link: linkCommand,
+        run: fullTargetPath
+    };
+
+    immutable content = testScript(commands, limeConfigPath);
     immutable scriptPath = workDirectory.buildPath("test_runner.sh");
 
     std.file.write(scriptPath, content);
@@ -41,21 +70,54 @@ void generateTestScript(string path)
     saveLimeConfigTemporaryFiles(limeConfigPath, workDirectory);
 }
 
-string testScript(string compileCommand, string runCommand, string limeConfigPath)
+string testScript(Commands commands, string limeConfigPath)
 {
     enum contentTemplate = q"BASH
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -eu
 set -o pipefail
 
-cp temp/* '%s/temp'
+has_argument() {
+  local term="$1"
+  shift
+  for arg; do
+    if [ $arg == "$term" ]; then
+      return 0
+    fi
+  done
 
-%s
-%s
+  return 1
+}
+
+compile() {
+  cp temp/* '%stemp'
+  %s
+}
+
+link() {
+  %s
+}
+
+run() {
+  %s
+}
+
+if has_argument "compile" "$@"; then
+  compile
+elif has_argument "link" "$@"; then
+  link
+elif has_argument "run" "$@"; then
+  run
+else
+  compile
+  link
+  run
+fi
 BASH";
 
-    return format!contentTemplate(limeConfigPath, compileCommand, runCommand);
+    with (commands)
+        return format!contentTemplate(limeConfigPath, compile, link, run);
 }
 
 string flags(string workDirectory)
@@ -65,7 +127,8 @@ string flags(string workDirectory)
         "versions",
         "import-paths",
         "string-import-paths",
-        "source-files"
+        "source-files",
+        "options"
     ];
 
     return getDubData(dataArgs, workDirectory);
@@ -135,3 +198,15 @@ string execute(const string[] args, string workDirectory)
 
     return result.output;
 }
+
+string target()
+{
+    immutable operating_system = environment["LIME_OS"];
+    immutable version_ = operating_system == "freebsd" ?
+        environment["LIME_OS_VERSION"] : "";
+
+    return  environment["LIME_ARCH"] ~ '-' ~ environment["LIME_OS"] ~ version_;
+}
+
+string objectFileExtension() =>
+    environment["LIME_OS"] == "windows" ? "obj" : "o";

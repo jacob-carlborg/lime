@@ -19,32 +19,45 @@ defaults:
 
 jobs:
   test:
-    name: Test
-    runs-on: ${{ matrix.os.host }}
+    name: Test ${{ matrix.arch }}-${{ matrix.data.os.target }}${{ matrix.data.os.version }}
+    runs-on: ${{ matrix.data.os.host }}
     continue-on-error: ${{ matrix.nightly == 'nightly' }}
     env:
       LIME_ARCH: ${{ matrix.arch }}
       LIME_COMPILER: ${{ matrix.compiler }}
+      LIME_CROSS_COMPILE: ${{ matrix.data.cross_compile }}
+      LIME_OS: ${{ matrix.data.os.target }}
+      LIME_OS_VERSION: ${{ matrix.data.os.version }}
     strategy:
       matrix:
         compiler: [ldc-latest]
         arch: [x86_64]
-        os:
-          - target: macos
-            host: macOS-latest
-          - target: linux
-            host: ubuntu-latest
-          - target: windows
-            host: windows-latest
-          # - target: freebsd
-          #   host: macOS-latest
-          #   version: 12.2
-          #   cross_platform_actions: true
-          # - target: openbsd
-          #   host: macOS-latest
-          #   version: 6.8
-          #   cross_platform_actions: true
-          #   cross_compile: true
+        data:
+          - os:
+              target: macos
+              host: macOS-latest
+
+          - os:
+              target: linux
+              host: ubuntu-latest
+
+          - os:
+              target: windows
+              host: windows-latest
+
+          - os:
+              target: freebsd
+              host: macOS-latest
+              version: 12.2
+            cross_platform_actions: true
+            cross_compile: true
+
+          - os:
+              target: openbsd
+              host: macOS-latest
+              version: 6.8
+            cross_platform_actions: true
+            cross_compile: true
 
         # include:
         #   - os:
@@ -73,21 +86,23 @@ jobs:
           persist-credentials: false
 
       - name: Test
-        if: ${{ !matrix.os.cross_platform_actions }}
+        if: ${{ !matrix.data.cross_platform_actions }}
         run: ./.github/workflows/ci.sh
 
-      - name: Test ${{ matrix.os.target }}
-        if: ${{ matrix.os.cross_platform_actions }}
+      - name: Build Tests
+        if: ${{ matrix.data.cross_platform_actions }}
+        run:
+          ./.github/workflows/build_tests.sh
+
+      - name: Run Tests
+        if: ${{ matrix.data.cross_platform_actions }}
         uses: cross-platform-actions/action@v0.0.1
         with:
           shell: bash
-          operating_system: ${{ matrix.os.target }}
-          version: ${{ matrix.os.version }}
-          environment_variables: LIME_ARCH LIME_COMPILER
-          run: |
-            sudo pkg update
-            sudo pkg install -y bash curl gnupg git llvm-90
-            ./.github/workflows/ci.sh
+          operating_system: ${{ matrix.data.os.target }}
+          version: ${{ matrix.data.os.version }}
+          environment_variables: LIME_CROSS_COMPILE
+          run: ./.github/workflows/ci.sh
 
       - name: Debug
         if: ${{ failure() }}

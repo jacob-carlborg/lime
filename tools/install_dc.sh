@@ -14,3 +14,7 @@ install_compiler() {
   source "$(~/dlang/install.sh "${compiler}" -a)"
   # export DMD="$([ "$DC" = 'ldc2' ] && echo 'ldmd2' || echo 'dmd')"
 }
+
+print_d_compiler_version() {
+  "${DMD}" --version
+}

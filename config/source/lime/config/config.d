@@ -223,103 +223,94 @@ mixin template MultipleInheritance(bases...)
     }
 }
 
-string toIdentifier(string value) => value.replace('.', '_');
+alias toIdentifier = (string value) => value.replace('.', '_');
 
-string pluginIdentifier(string plugin) =>
+alias pluginIdentifier = (string plugin) =>
     "config_plugins_" ~ plugin.toIdentifier;
 
-string overrideIdentifier(string override_) =>
+alias overrideIdentifier = (string override_) =>
     "config_overrides_" ~ override_.toIdentifier;
 
-void generateHelper(string plugin, void delegate(size_t index, string plugin, string override_) block)
+alias generatePluginImport = (string plugin) =>
+    "import " ~ pluginIdentifier(plugin) ~ " = " ~ "config.plugins." ~ plugin ~ ';';
+
+alias generateImports = (string plugin)
 {
+    auto imports = generatePluginImport(plugin) ~ '\n';
+
     foreach (i, overrideLine; overrides)
     {
-        const components = overrideLine.split(':');
-        const overriddenPlugin = components[0];
-        const override_ = components[1];
+        immutable components = overrideLine.split(':');
+        immutable overriddenPlugin = components[0];
+        immutable override_ = components[1];
 
         if (overriddenPlugin != plugin)
             continue;
 
-        block(i, overriddenPlugin, override_);
-    }
-}
-
-string generatePluginImport(string plugin) =>
-    "import " ~ pluginIdentifier(plugin) ~ " = " ~ "config.plugins." ~ plugin ~ ';';
-
-string generateImports(string plugin)
-{
-    auto imports = generatePluginImport(plugin) ~ '\n';
-
-    generateHelper(plugin, (i, plugin, override_) {
         imports ~= "import "
             ~ overrideIdentifier(override_)
             ~ " = "
             ~ "config.overrides."
             ~ override_
             ~ ";\n";
-    });
+    }
 
     return imports;
-}
+};
 
-string generatePluginField(string plugin) =>
+alias generatePluginField = (string plugin) =>
      pluginIdentifier(plugin) ~ '.' ~ pluginName(plugin).camelize ~ " __original;";
 
-string generateFields(string plugin)
+alias generateFields = (string plugin)
 {
     auto result = generatePluginField(plugin) ~ '\n';
 
-    generateHelper(plugin, (i, plugin, override_) {
+    foreach (i, overrideLine; overrides)
+    {
+        immutable components = overrideLine.split(':');
+        immutable overriddenPlugin = components[0];
+        immutable override_ = components[1];
+
+        if (overriddenPlugin != plugin)
+            continue;
+
         result ~= overrideIdentifier(override_)
             ~ '.'
-            ~ pluginName(plugin).camelize
+            ~ pluginName(overriddenPlugin).camelize
             ~ " __override"
             ~ i.toString
             ~ ";\n";
-    });
+    }
 
     return result;
-}
+};
 
-string generateMultipleInheritance(string plugin)
+alias generateMultipleInheritance = (string plugin)
 {
     string overrides;
 
-    generateHelper(plugin, (i, _plugin, _override_) {
+    foreach (i, overrideLine; .overrides)
+    {
+        immutable overriddenPlugin = overrideLine.split(':')[0];
+
+        if (overriddenPlugin != plugin)
+            continue;
+
         overrides = "__override" ~ i.toString ~ ", " ~ overrides;
-    });
+    }
 
     return "mixin MultipleInheritance!(" ~ overrides ~ "__original);";
-}
+};
 
 alias Alias(alias symbol) = symbol;
 
-string pluginName(string fullyQualifiedName) =>
-    fullyQualifiedName.split('.')[$ - 1];
+alias pluginName = (string fullyQualifiedName) =>
+    split(fullyQualifiedName, '.')[$ - 1];
 
-string[string] overridesToAssociativeArray(string data)
-{
-
-    string[string] overrides;
-    size_t start;
-    string key;
-
-    foreach (line; data.split('\n'))
-    {
-        auto components = line.split(':');
-        overrides[components[0]] = components[1];
-    }
-
-    return overrides;
-}
-
-string[] split(string value, char delimiter)
+alias split = (string value, char delimiter)
 {
     if (value.length == 0)
-        return [];
+        return null;
 
     string[] result;
     size_t start;
@@ -340,9 +331,9 @@ string[] split(string value, char delimiter)
     }
 
     return result;
-}
+};
 
-string replace(string value, char pattern, char replacement)
+alias replace = (string value, char pattern, char replacement)
 {
     string result;
 
@@ -350,9 +341,9 @@ string replace(string value, char pattern, char replacement)
         result ~= e == pattern ? replacement : e;
 
     return result;
-}
+};
 
-string toString(size_t value)
+alias toString = (size_t value)
 {
     string result;
     enum base = 10;
@@ -364,13 +355,13 @@ string toString(size_t value)
     while (value != 0)
     {
         int rem = value % base;
-        const c = cast(char) (rem > 9 ? rem - 10 + 'a' : rem + '0');
+        immutable c = cast(char) (rem > 9 ? rem - 10 + 'a' : rem + '0');
         result = c ~ result;
         value = value / base;
     }
 
     return result;
-}
+};
 
 char toUppercase(char value) => cast(char) (value - 32);
 char toLowercase(char value) => cast(char) (value + 32);
@@ -378,7 +369,7 @@ char toLowercase(char value) => cast(char) (value + 32);
 bool isUppercase(char value) => value >= 65 && value <= 90;
 bool isLowercase(char value) => value >= 97 && value <= 122;
 
-string camelize(string value)
+alias camelize = (string value)
 {
     string result;
     bool nextUppercase = false;
@@ -407,4 +398,4 @@ string camelize(string value)
     }
 
     return result;
-}
+};

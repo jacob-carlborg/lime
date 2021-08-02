@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -eu
 set -o pipefail
@@ -21,9 +21,9 @@ find tests -name test.sh -print0 |
     echo "********** Running tests in: $(pwd)"
 
     if has_argument "--verbose" "$@"; then
-      ./test.sh
+      ./test.sh "$@"
     else
-      ./test.sh > /dev/null
+      ./test.sh "$@" > /dev/null
     fi
 
     popd > /dev/null
