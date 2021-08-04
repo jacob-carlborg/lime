@@ -43,6 +43,7 @@ void generateTestScript(string path)
     immutable compileCommand = join(
         `"$DMD"` ~
         defaultFlags ~
+        extraFlags ~
         ("-of" ~ objectTargetPath) ~
         flags,
         " \\\n    "
@@ -134,6 +135,18 @@ string flags(string workDirectory)
     return getDubData(dataArgs, workDirectory);
 }
 
+string[] extraFlags()
+{
+    if (architecture != "riscv64")
+        return [];
+
+    return [
+        "--target-abi",
+        "lp64d",
+        "--mattr=+m,+a,+f,+d,+c,+relax,-save-restore"
+    ];
+}
+
 string targetPath(string workDirectory) =>
     getDubDataList("target-path", workDirectory);
 
@@ -210,3 +223,5 @@ string target()
 
 string objectFileExtension() =>
     environment["LIME_OS"] == "windows" ? "obj" : "o";
+
+string architecture() => environment["LIME_ARCH"];
