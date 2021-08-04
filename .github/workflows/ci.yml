@@ -29,6 +29,7 @@ jobs:
       LIME_OS: ${{ matrix.data.os.target }}
       LIME_OS_VERSION: ${{ matrix.data.os.version }}
     strategy:
+      fail-fast: false
       matrix:
         compiler: [ldc-latest]
         arch: [x86_64]
@@ -59,13 +60,16 @@ jobs:
             cross_platform_actions: true
             cross_compile: true
 
-        # include:
-        #   - os:
-        #       target: windows
-        #       host: windows-latest
-        #     compiler: ldc-latest
-        #     arch: x86
-        #
+        include:
+          - data:
+              os:
+                target: linux
+                host: ubuntu-latest
+              cross_compile: true
+              docker: true
+            compiler: ldc-latest
+            arch: arm64
+
         #   - os:
         #       target: linux
         #       host: ubuntu-latest
@@ -86,15 +90,14 @@ jobs:
           persist-credentials: false
 
       - name: Test
-        if: ${{ !matrix.data.cross_platform_actions }}
+        if: ${{ !matrix.data.cross_platform_actions && !matrix.data.docker }}
         run: ./.github/workflows/ci.sh
 
       - name: Build Tests
-        if: ${{ matrix.data.cross_platform_actions }}
-        run:
-          ./.github/workflows/build_tests.sh
+        if: ${{ matrix.data.cross_compile }}
+        run: ./.github/workflows/build_tests.sh
 
-      - name: Run Tests
+      - name: Run Tests in VM
         if: ${{ matrix.data.cross_platform_actions }}
         uses: cross-platform-actions/action@v0.0.1
         with:
@@ -104,6 +107,25 @@ jobs:
           environment_variables: LIME_CROSS_COMPILE
           run: ./.github/workflows/ci.sh
 
-      - name: Debug
-        if: ${{ failure() }}
-        run: cat config/temp/mixin.d
+      - name: Set up QEMU
+        if: ${{ matrix.data.docker }}
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: ${{ matrix.arch }}
+
+      - name: Run Tests in Docker
+        if: ${{ matrix.data.docker }}
+        run: |
+          tree tests
+          docker run \
+            --rm \
+            -v $(pwd):/${{ github.workspace }} \
+            -w ${{ github.workspace }} \
+            -e LIME_CROSS_COMPILE=${{ env.LIME_CROSS_COMPILE }} \
+            --platform linux/${{ matrix.arch }} \
+            ubuntu \
+            ./.github/workflows/ci.sh
+
+      # - name: Debug
+      #   if: ${{ failure() }}
+      #   run: cat config/temp/mixin.d

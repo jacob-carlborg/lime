@@ -11,6 +11,12 @@ else
   cross_compile=true
 fi
 
+install_c_compiler() {
+  if "$cross_compile" && ! command -v cc > /dev/null; then
+    apt update && apt install -y gcc
+  fi
+}
+
 run_tests() {
   local extra_args=""
 
@@ -30,4 +36,5 @@ install_dc() {
 }
 
 install_dc
+install_c_compiler
 run_tests
