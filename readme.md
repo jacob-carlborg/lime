@@ -23,14 +23,14 @@
 
 ## Potential Platforms
 
-| Operating System | x86-64 | x86 | ARM64 | ARM | PowerPC 64 | S390x |
-|------------------|--------|-----|-------|-----|------------|-------|
-| macOS            | ✓      |     |       |     |            |       |
-| iOS              |        |     | ✓     |     |            |       |
-| Linux            | ✓      | ✓   | ✓     | ✓   | ✓          | ✓     |
-| Windows          | ✓      | ✓   |       |     |            |       |
-| FreeBSD          | ✓      |     |       |     |            |       |
-| OpenBSD          | ✓      |     |       |     |            |       |
+| Operating System | x86-64 | x86 | ARM64 | ARM | PowerPC 64 | RISC-V 64 |
+|------------------|--------|-----|-------|-----|------------|-----------|
+| macOS            | ✓      |     |       |     |            |           |
+| iOS              |        |     | ✓     |     |            |           |
+| Linux            | ✓      | ✓   | ✓     | ✓   | ✓          | ✓         |
+| Windows          | ✓      | ✓   |       |     |            |           |
+| FreeBSD          | ✓      |     |       |     |            |           |
+| OpenBSD          | ✓      |     |       |     |            |           |
 
 These are the potentially supported platforms. It should be fairly easy to
 setup CI for these. x86-64 and iOS ARM64 will be native. All other
