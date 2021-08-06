@@ -13,7 +13,8 @@ fi
 
 install_c_compiler() {
   if "$cross_compile" && ! command -v cc > /dev/null; then
-    apt update && apt install -y gcc
+    apt update
+    apt install -y gcc
   fi
 }
 

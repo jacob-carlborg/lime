@@ -88,6 +88,16 @@ jobs:
             compiler: ldc-latest
             arch: riscv64
 
+          - data:
+              os:
+                target: linux
+                host: ubuntu-latest
+              cross_compile: true
+              docker: true
+            compiler: ldc-latest
+            arch: i386
+            docker_arch: 386
+
         #   - os:
         #       target: linux
         #       host: ubuntu-latest
@@ -139,7 +149,7 @@ jobs:
             -v $(pwd):/${{ github.workspace }} \
             -w ${{ github.workspace }} \
             -e LIME_CROSS_COMPILE=${{ env.LIME_CROSS_COMPILE }} \
-            --platform linux/${{ matrix.arch }} \
+            --platform linux/${{ matrix.docker_arch || matrix.arch }} \
             debian:unstable-slim \
             ./.github/workflows/ci.sh
 
