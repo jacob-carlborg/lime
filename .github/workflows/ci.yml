@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   test:
-    name: Test ${{ matrix.arch }}-${{ matrix.data.os.target }}${{ matrix.data.os.version }}
+    name: ${{ matrix.arch }}-${{ matrix.data.os.target }}${{ matrix.data.os.version }} ${{ matrix.compiler }}
     runs-on: ${{ matrix.data.os.host }}
     continue-on-error: ${{ matrix.nightly == 'nightly' }}
     env:
@@ -105,18 +105,20 @@ jobs:
             compiler: ldc-latest
             arch: i386
 
-        #   - os:
-        #       target: linux
-        #       host: ubuntu-latest
-        #     compiler: ldc-beta
-        #     arch: x86_64
-        #
-        #   - os:
-        #       target: linux
-        #       host: ubuntu-latest
-        #     compiler: ldc-master
-        #     arch: x86_64
-        #     nightly: nightly
+          - data:
+              os:
+                target: linux
+                host: ubuntu-latest
+            compiler: ldc-beta
+            arch: x86_64
+
+          - data:
+              os:
+                target: linux
+                host: ubuntu-latest
+            compiler: ldc-master
+            arch: x86_64
+            nightly: nightly
 
     steps:
       - name: Clone Repository
