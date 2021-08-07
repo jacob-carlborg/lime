@@ -98,6 +98,13 @@ jobs:
             arch: i386
             docker_arch: 386
 
+          - data:
+              os:
+                target: windows
+                host: windows-latest
+            compiler: ldc-latest
+            arch: i386
+
         #   - os:
         #       target: linux
         #       host: ubuntu-latest
