@@ -92,6 +92,15 @@ jobs:
               os:
                 target: linux
                 host: ubuntu-latest
+            compiler: ldc-master
+            arch: mips64el
+            docker_arch: mips64le
+            nightly: nightly
+
+          - data:
+              os:
+                target: linux
+                host: ubuntu-latest
               cross_compile: true
               docker: true
             compiler: ldc-latest
