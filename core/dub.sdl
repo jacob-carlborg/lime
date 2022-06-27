@@ -1,0 +1,9 @@
+name "core"
+
+targetType "sourceLibrary"
+
+dependency "lime:config" version="*"
+
+buildType "foobar" {
+  stringImportPaths "."
+}
