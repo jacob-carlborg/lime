@@ -11,7 +11,7 @@ on:
     - cron: 0 0 * * *
 
 env:
-  MACOSX_DEPLOYMENT_TARGET: 10.9
+  MACOSX_DEPLOYMENT_TARGET: 10.12
 
 defaults:
   run:
