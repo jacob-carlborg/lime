@@ -49,14 +49,14 @@ jobs:
           - os:
               target: freebsd
               host: macOS-latest
-              version: 12.2
+              version: '13.0'
             cross_platform_actions: true
             cross_compile: true
 
           - os:
               target: openbsd
               host: macOS-latest
-              version: 6.8
+              version: '7.1'
             cross_platform_actions: true
             cross_compile: true
 
