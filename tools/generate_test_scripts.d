@@ -65,6 +65,9 @@ void generateTestScript(string path)
     immutable content = testScript(commands, limeConfigPath);
     immutable scriptPath = workDirectory.buildPath("test_runner.sh");
 
+    writefln("********************** %s", scriptPath);
+    writeln(content);
+    writeln("**********************");
     std.file.write(scriptPath, content);
     scriptPath.setAttributes(scriptPath.getAttributes | octal!100);
 
