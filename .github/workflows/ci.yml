@@ -186,6 +186,7 @@ jobs:
         with:
           shell: bash
           operating_system: ${{ matrix.data.os.target }}
+          architecture: ${{ matrix.arch }}
           version: ${{ matrix.data.os.version }}
           environment_variables: LIME_CROSS_COMPILE
           run: ./.github/workflows/ci.sh
@@ -211,4 +212,3 @@ jobs:
       # - name: Debug
       #   if: ${{ failure() }}
       #   run: cat config/temp/mixin.d
-

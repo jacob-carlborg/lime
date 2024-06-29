@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -eux
 set -o pipefail
 
 . ./tools/install_dc.sh
