@@ -1,3 +1,7 @@
+download() {
+  curl --retry 3 -fsS "$1"
+}
+
 d_compiler() {
   case "${LIME_COMPILER}" in
     'dmd-latest') echo 'dmd' ;;
@@ -9,9 +13,8 @@ d_compiler() {
 }
 
 install_compiler() {
-  local compiler="$(d_compiler)"
-  curl -sS -L https://dlang.org/install.sh | bash -s "${compiler}"
-  source "$(~/dlang/install.sh "${compiler}" -a)"
+  download https://dlang.org/d-keyring.gpg | gpg --import /dev/stdin
+  source $(download https://dlang.org/install.sh | bash -s "$(d_compiler)" -a)
   # export DMD="$([ "$DC" = 'ldc2' ] && echo 'ldmd2' || echo 'dmd')"
 }
 
