@@ -133,6 +133,16 @@ jobs:
 
           - data:
               os:
+                target: freebsd
+                host: ubuntu-latest
+                version: '14.0'
+              cross_platform_actions: true
+              cross_compile: true
+            compiler: ldc-latest
+            arch: arm64
+
+          - data:
+              os:
                 target: linux
                 host: ubuntu-latest
             compiler: ldc-beta
