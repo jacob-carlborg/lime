@@ -1,7 +1,6 @@
 /+
 dub.sdl:
     name "generate_test_scripts"
-    dflags "-preview=shortenedMethods"
 +/
 import std;
 
