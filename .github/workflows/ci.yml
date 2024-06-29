@@ -36,7 +36,7 @@ jobs:
         data:
           - os:
               target: macos
-              host: macOS-latest
+              host: macOS-13
 
           - os:
               target: linux
