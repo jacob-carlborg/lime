@@ -19,14 +19,11 @@ install_c_compiler() {
 }
 
 run_tests() {
-  local extra_args=""
-
   if "$cross_compile"; then
     ./test.sh --verbose link
-    extra_args="run"
   fi
 
-  ./test.sh --verbose "$extra_args"
+  ./test.sh --verbose run
 }
 
 install_dc() {
