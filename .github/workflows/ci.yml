@@ -70,6 +70,13 @@ jobs:
         include:
           - data:
               os:
+                target: macos
+                host: macOS-latest
+            compiler: ldc-latest
+            arch: arm64
+
+          - data:
+              os:
                 target: linux
                 host: ubuntu-latest
               cross_compile: true
