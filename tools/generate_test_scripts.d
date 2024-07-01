@@ -75,7 +75,7 @@ string testScript(Commands commands, string limeConfigPath)
     enum contentTemplate = q"BASH
 #!/usr/bin/env bash
 
-set -eux
+set -eu
 set -o pipefail
 
 has_argument() {
