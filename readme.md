@@ -23,15 +23,15 @@
 
 ## Potential Platforms
 
-| Operating System | x86-64 | x86 | ARM64 | ARM | PowerPC 64 | RISC-V 64 |
-|------------------|--------|-----|-------|-----|------------|-----------|
-| macOS            | ✓      |     | ✓     |     |            |           |
-| iOS              |        |     | ✓     |     |            |           |
-| Linux            | ✓      | ✓   | ✓     | ✓   | ✓          | ✓         |
-| Windows          | ✓      | ✓   |       |     |            |           |
-| FreeBSD          | ✓      |     | ✓     |     |            |           |
-| OpenBSD          | ✓      |     | ✓     |     |            |           |
-| NetBSD           | ✓      |     | ✓     |     |            |           |
+| Operating System | x86-64 | x86 | ARM64 | ARM | PowerPC 64 | RISC-V 64 | System Z |
+|------------------|--------|-----|-------|-----|------------|-----------|----------|
+| macOS            | ✓      |     | ✓     |     |            |           |          |
+| iOS              |        |     | ✓     |     |            |           |          |
+| Linux            | ✓      | ✓   | ✓     | ✓   | ✓          | ✓         | ✓        |
+| Windows          | ✓      | ✓   |       |     |            |           |          |
+| FreeBSD          | ✓      |     | ✓     |     |            |           |          |
+| OpenBSD          | ✓      |     | ✓     |     |            |           |          |
+| NetBSD           | ✓      |     | ✓     |     |            |           |          |
 
 These are the potentially supported platforms. It should be fairly easy to
 setup CI for these. x86-64 and iOS ARM64 will be native. All other
