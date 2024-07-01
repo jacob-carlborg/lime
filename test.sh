@@ -7,7 +7,7 @@ has_argument() {
   local term="$1"
   shift
   for arg; do
-    if [ $arg = "$term" ]; then
+    if [ "$arg" = "$term" ]; then
       return 0
     fi
   done
