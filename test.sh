@@ -23,7 +23,7 @@ test_action_description() {
   elif has_argument "run" "$@"; then
     echo "Running"
   else
-    echo "Unrecognized test action"
+    echo "Unrecognized test action '$@'" >&2
     exit 1
   fi
 }
@@ -31,7 +31,9 @@ test_action_description() {
 find tests -name test.sh -print0 |
   while IFS= read -r -d '' line; do
     pushd $(dirname "$line") > /dev/null
-    echo "********** $(test_action_description "$@") tests in: $(pwd)"
+
+    description="$(test_action_description "$@")"
+    echo "********** $description tests in: $(pwd)"
 
     if has_argument "--verbose" "$@"; then
       ./test.sh "$@"
