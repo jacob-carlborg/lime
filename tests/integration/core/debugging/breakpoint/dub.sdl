@@ -1,0 +1,7 @@
+name "core"
+description "A minimal D application."
+authors "Jacob Carlborg"
+copyright "Copyright © 2024, Jacob Carlborg"
+license "BSL-1.0"
+
+dependency "lime:core" path="../../../../../"

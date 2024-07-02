@@ -5,7 +5,10 @@ copyright "Copyright © 2021, Jacob Carlborg"
 license "BSL-1.0"
 
 dependency ":config" version="*"
+dependency ":core" version="*"
 
+subPackage "compiler"
 subPackage "config"
+subPackage "core"
 
 targetType "sourceLibrary"

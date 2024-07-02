@@ -1,0 +1,9 @@
+name "core"
+description "Core package for Lime."
+authors "Jacob Carlborg"
+copyright "Copyright © 2024, Jacob Carlborg"
+license "BSL-1.0"
+
+targetType "sourceLibrary"
+
+dependency "lime:compiler" version="*"
