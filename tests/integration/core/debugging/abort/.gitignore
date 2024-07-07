@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/abort
+abort.so
+abort.dylib
+abort.dll
+abort.a
+abort.lib
+abort-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

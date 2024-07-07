@@ -6,4 +6,5 @@ license "BSL-1.0"
 
 targetType "sourceLibrary"
 
-dependency "lime:compiler" version="*"
+dependency "lime:config" path=".."
+dependency "lime:compiler" path=".."

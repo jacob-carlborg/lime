@@ -4,6 +4,7 @@ authors "Jacob Carlborg"
 copyright "Copyright © 2021, Jacob Carlborg"
 license "BSL-1.0"
 
+dependency ":compiler" version="*"
 dependency ":config" version="*"
 dependency ":core" version="*"
 
