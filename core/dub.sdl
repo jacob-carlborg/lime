@@ -8,3 +8,20 @@ targetType "sourceLibrary"
 
 dependency "lime:config" path=".."
 dependency "lime:compiler" path=".."
+
+configuration "library" {
+  sourcePaths "library_source"
+  importPaths "library_source"
+
+  // Don't use a config file to avoid using druntime and Phobos.
+  dflags "-conf="
+
+  // Don't link with druntime or Phobos. This is required because Dub builds
+  // packages in two steps. First it compiles the code then it links the code.
+  // When it links the code only a selected few flags specified in `dflags` are
+  // passed to the D compiler. `-conf` is not one of them, `-defaultlib` is one.
+  dflags "-defaultlib="
+}
+
+configuration "phobos-compatibility" {
+}
