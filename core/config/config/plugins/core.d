@@ -1,5 +1,6 @@
 module config.plugins.core;
 
+import lime.core.debugging;
 import lime.core.source_location;
 
 struct Core
@@ -7,11 +8,16 @@ struct Core
   Debugging debugging;
 }
 
-private:
-
 struct Debugging
 {
-  enum void function(SourceLocation) abortHandler = (sourceLocation){
+  alias AssertHandler = noreturn function(SourceLocation, string);
+  alias AbortHandler = noreturn function(SourceLocation);
+
+  enum AbortHandler abortHandler = (sourceLocation){
     while(true) {}
+  };
+
+  enum AssertHandler assertHandler = (sourceLocation, message) {
+    abort(sourceLocation);
   };
 }

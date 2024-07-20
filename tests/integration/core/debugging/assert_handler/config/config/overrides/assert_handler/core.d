@@ -1,8 +1,8 @@
-module config.overrides.abort.core;
+module config.overrides.assert_handler.core;
 
-import lime.compiler;
-import lime.core.debugging;
 import lime.core.source_location;
+import lime.core.debugging;
+import lime.compiler;
 
 import app;
 
@@ -18,7 +18,7 @@ struct Debugging
   Debugging base;
   alias base this;
 
-  enum Debugging.AbortHandler abortHandler = (sourceLocation) {
+  enum Debugging.AssertHandler assertHandler = (sourceLocation, message) {
     breakpoint();
     trap();
   };

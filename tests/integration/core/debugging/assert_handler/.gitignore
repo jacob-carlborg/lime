@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/assert_handler
+assert_handler.so
+assert_handler.dylib
+assert_handler.dll
+assert_handler.a
+assert_handler.lib
+assert_handler-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

@@ -5,6 +5,9 @@ import lime.config.config;
 import lime.compiler;
 import lime.core.source_location;
 
+/// Indicates a function will never return.
+alias noreturn = typeof(*null);
+
 /**
  * Triggers an execution trap with the intention of requesting the attention of
  * a debugger.
@@ -17,7 +20,7 @@ alias breakpoint = debugTrap;
  * Params:
  *  sourceLocation = the source location of where `abort` was called from
  */
-void abort(SourceLocation sourceLocation = SourceLocation())
+noreturn abort(SourceLocation sourceLocation = SourceLocation())
 {
   config.core.debugging.abortHandler(sourceLocation);
 }

@@ -17,9 +17,9 @@ has_argument() {
 
 assert_breakpoint() {
   if ! printf "r\nsource info\n" |
-    lldb -s /dev/stdin abort 2>&1 |
+    lldb -s /dev/stdin assert_handler 2>&1 |
     tail -1 |
-    grep -q 'lime/tests/integration/core/debugging/abort/config/config/overrides/abort/core.d:23:5$'; then
+    grep -q 'lime/tests/integration/core/debugging/assert_handler/config/config/overrides/assert_handler/core.d:23:5$'; then
       echo "Test failed: $(realpath "$0"):$(($LINENO - 1))" >&2
       exit 1
   fi
