@@ -115,10 +115,11 @@ jobs:
               os:
                 target: linux
                 host: ubuntu-latest
-            compiler: ldc-master
+              cross_compile: true
+              docker: true
+            compiler: ldc-latest
             arch: mips64el
             docker_arch: mips64le
-            nightly: nightly
 
           - data:
               os:
@@ -211,7 +212,7 @@ jobs:
         if: ${{ matrix.data.docker }}
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: ${{ matrix.arch }}
+          platforms: ${{ matrix.docker_arch }}
 
       - name: Run Tests in Docker
         if: ${{ matrix.data.docker }}

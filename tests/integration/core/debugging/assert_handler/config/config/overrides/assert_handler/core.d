@@ -4,7 +4,7 @@ import lime.core.source_location;
 import lime.core.debugging;
 import lime.compiler;
 
-import app;
+import support.stdio;
 
 struct Core
 {
@@ -19,7 +19,8 @@ struct Debugging
   alias base this;
 
   enum Debugging.AssertHandler assertHandler = (sourceLocation, message) {
-    breakpoint();
+    fprintf(stderr, "handler hit\n");
+    fflush(stderr);
     trap();
   };
 }

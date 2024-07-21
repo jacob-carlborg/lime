@@ -4,7 +4,7 @@ import lime.compiler;
 import lime.core.debugging;
 import lime.core.source_location;
 
-import app;
+import support.stdio;
 
 struct Core
 {
@@ -19,7 +19,8 @@ struct Debugging
   alias base this;
 
   enum Debugging.AbortHandler abortHandler = (sourceLocation) {
-    breakpoint();
+    fprintf(stderr, "handler hit\n");
+    fflush(stderr);
     trap();
   };
 }

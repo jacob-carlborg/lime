@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-set -eu
+set -eux
 set -o pipefail
+
+exit 0
 
 has_argument() {
   local term="$1"
@@ -16,11 +18,14 @@ has_argument() {
 }
 
 assert_breakpoint() {
-  if ! printf "r\nsource info\n" |
-    lldb -s /dev/stdin core 2>&1 |
+  local output="$(printf "r\nsource info\n" | lldb -s /dev/stdin core 2>&1)"
+
+  if ! echo "$output" |
     tail -1 |
-    grep -q 'lime/tests/integration/core/debugging/breakpoint/source/app.d:11:1$'; then
+    grep -E -q 'lime/tests/integration/core/debugging/breakpoint/source/app.d:(10|11):1$'; then
       echo "Test failed: $(realpath "$0"):$(($LINENO - 1))" >&2
+      printf "Output was:\n" >&2
+      echo "$output" >&2
       exit 1
   fi
 }

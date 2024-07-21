@@ -15,19 +15,20 @@ has_argument() {
   return 1
 }
 
-assert_breakpoint() {
-  if ! printf "r\nsource info\n" |
-    lldb -s /dev/stdin assert_handler 2>&1 |
-    tail -1 |
-    grep -q 'lime/tests/integration/core/debugging/assert_handler/config/config/overrides/assert_handler/core.d:23:5$'; then
+assert_assert_handler() {
+  local output="$(./assert_handler 2>&1)"
+
+  if ! echo "$output" | grep -q 'handler hit'; then
       echo "Test failed: $(realpath "$0"):$(($LINENO - 1))" >&2
+      printf "Output was:\n" >&2
+      echo "$output"
       exit 1
   fi
 }
 
 invoke_test_runner() {
   if has_argument "run" "$@"; then
-    assert_breakpoint
+    assert_assert_handler
   else
     ./test_runner.sh "$@"
   fi
@@ -40,7 +41,7 @@ invoke_dub() {
     dub build > /dev/null
   fi
 
-  assert_breakpoint
+  assert_assert_handler
 }
 
 if [ -s test_runner.sh ]; then
