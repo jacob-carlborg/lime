@@ -111,16 +111,15 @@ jobs:
             compiler: ldc-latest
             arch: s390x
 
-          # LDC/LLVM seem to produce an ELF 32 bit file
-          # - data:
-          #     os:
-          #       target: linux
-          #       host: ubuntu-latest
-          #     cross_compile: true
-          #     docker: true
-          #   compiler: ldc-latest
-          #   arch: mips64el
-          #   docker_arch: mips64le
+          - data:
+              os:
+                target: linux
+                host: ubuntu-latest
+              cross_compile: true
+              docker: true
+            compiler: ldc-latest
+            arch: mips64el
+            docker_arch: mips64le
 
           - data:
               os:

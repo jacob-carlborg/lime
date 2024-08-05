@@ -136,14 +136,19 @@ string flags(string workDirectory)
 
 string[] extraFlags()
 {
-    if (architecture != "riscv64")
-        return [];
+    switch (architecture)
+    {
+        case "mips64el": return ["--mabi=n64"];
 
-    return [
-        "--target-abi",
-        "lp64d",
-        "--mattr=+m,+a,+f,+d,+c,+relax,-save-restore"
-    ];
+        case "riscv64":
+            return [
+                "--target-abi",
+                "lp64d",
+                "--mattr=+m,+a,+f,+d,+c,+relax,-save-restore"
+            ];
+
+        default: return [];
+    }
 }
 
 string targetPath(string workDirectory) =>
