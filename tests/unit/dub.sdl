@@ -1,0 +1,17 @@
+name "unit"
+description "Unit tests for Lime"
+authors "Jacob Carlborg"
+copyright "Copyright © 2024, Jacob Carlborg"
+license "BSL-1.0"
+
+dependency "lime:core" path="../../"
+dependency "lime:config" path="../../"
+dependency "support" path="../support"
+
+dflags "-Jresources"
+lflags "utility.o"
+libs "c++" platform="osx"
+libs "stdc++" platform="linux"
+
+preGenerateCommands "$DUB_EXE describe --import-paths > resources/import_paths.txt"
+preGenerateCommands "$DUB_EXE describe --data=source-files --data-list > resources/source_files.txt"

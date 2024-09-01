@@ -21,7 +21,7 @@ immutable struct SourceLocation
    *
    * Returns: the source location
    */
-  static SourceLocation opCall(string filename = __FILE__, size_t lineNumber = __LINE__)
+  static SourceLocation opCall(string filename = __FILE__, size_t lineNumber = __LINE__) pure nothrow @nogc @safe
   {
     SourceLocation location = {
       filename: filename,

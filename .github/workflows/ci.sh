@@ -12,9 +12,9 @@ else
 fi
 
 install_c_compiler() {
-  if "$cross_compile" && ! command -v cc > /dev/null; then
+  if "$cross_compile" && ! command -v c++ > /dev/null; then
     apt update
-    apt install -y gcc
+    apt install -y g++
   fi
 }
 

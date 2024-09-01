@@ -38,6 +38,8 @@ void generateTestScript(string path)
     immutable flags = .flags(workDirectory);
     immutable limeConfigPath = .limeConfigPath(workDirectory);
     immutable objectTargetPath = fullTargetPath.setExtension(objectFileExtension);
+    immutable linkerFlags = getDubDataList("lflags", workDirectory).front;
+    immutable libFlags = .libFlags(workDirectory);
 
     immutable compileCommand = join(
         `"$DMD"` ~
@@ -52,8 +54,12 @@ void generateTestScript(string path)
         "cc",
         objectTargetPath,
         "-o",
-        fullTargetPath
-    ].join(" \\\n  ");
+        fullTargetPath,
+        linkerFlags,
+        libFlags
+    ]
+    .filter!(e => e.length > 0)
+    .join(" \\\n  ");
 
     Commands commands = {
         compile: compileCommand,
@@ -152,10 +158,16 @@ string[] extraFlags()
 }
 
 string targetPath(string workDirectory) =>
-    getDubDataList("target-path", workDirectory);
+    getDubDataList("target-path", workDirectory).front;
 
 string targetName(string workDirectory) =>
-    getDubDataList("target-name", workDirectory);
+    getDubDataList("target-name", workDirectory).front;
+
+string libFlags(string workDirectory) =>
+    getDubDataList("libs", workDirectory)
+        .filter!(e => e.length > 0)
+        .map!(e => "-l" ~ e)
+        .join(" ");
 
 string limeConfigPath(string workDirectory)
 {
@@ -186,7 +198,7 @@ void saveLimeConfigTemporaryFiles(string limeConfigPath, string workDirectory)
         .each!(c => std.file.copy(c.expand));
 }
 
-string getDubDataList(string dataValue, string workDirectory)
+string[] getDubDataList(string dataValue, string workDirectory)
 {
     immutable args = [
         "dub",
@@ -197,7 +209,7 @@ string getDubDataList(string dataValue, string workDirectory)
         "--data-list"
     ];
 
-    return execute(args, workDirectory).splitLines.front;
+    return execute(args, workDirectory).splitLines;
 }
 
 string getDubData(const string[] dataValues, string workDirectory)
