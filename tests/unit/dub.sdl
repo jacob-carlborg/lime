@@ -1,0 +1,10 @@
+name "unit"
+description "Unit tests for Lime"
+authors "Jacob Carlborg"
+copyright "Copyright © 2024, Jacob Carlborg"
+license "BSL-1.0"
+
+dependency "lime:core" path="../../"
+
+dflags "-Jresources"
+preBuildCommands "find source/ -name '*.d' | sed 's#source//##' | sed 's#\\.d$$##g' | sed 's#/#.#g' | grep -v main > resources/imports.txt"
