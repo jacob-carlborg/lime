@@ -14,3 +14,4 @@ unit-test-*
 *.o
 *.obj
 *.lst
+/resources

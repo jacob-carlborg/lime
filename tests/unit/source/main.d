@@ -1,11 +1,13 @@
 module main;
 
-enum moduleData = import("imports.txt").split('\n');
-enum imports = moduleData.map!(e => "import " ~ e ~ ";").join(";\n");
+enum importPaths = import("import_paths.txt").split('\n');
+enum sourceFiles = import("source_files.txt").split('\n');
+enum moduleData = extractModuleData(sourceFiles, importPaths);
+enum imports = moduleData.map!(e => "import " ~ e ~ ";").join("\n");
 
 mixin(imports);
 
-alias modules = AliasSeq!(mixin(moduleData.join(",\n")));
+mixin("alias modules = AliasSeq!(" ~ moduleData.join(",\n") ~ ");");
 
 extern (C) int main(int argc, const char** argv)
 {
@@ -30,6 +32,26 @@ struct Test
   }
 }
 
+string[] extractModuleData(string[] sourceFiles, string[] importPaths)
+{
+  return sourceFiles.map!((file) {
+    foreach (path; importPaths)
+    {
+      const withoutPrefix = file.removePrefix(path);
+
+      if (withoutPrefix != file)
+        return withoutPrefix;
+    }
+
+    return file;
+  })
+  .map!(file => file.removeSuffix(".d"))
+  .map!(file => file.replace('/', '.'))
+  .filter!(e => e != "object" && e != "main")
+  .map!(e => e.removeSuffix(".package"));
+}
+
+
 size_t unitTestCount()
 {
   size_t count = 0;
@@ -45,7 +67,7 @@ size_t unitTestCount()
 
 Test[] tests()
 {
-  static Test[unitTestCount] tests;
+  __gshared Test[unitTestCount] tests;
   size_t count;
 
   static foreach (module_; modules)
@@ -90,6 +112,17 @@ string[] map(alias func)(string[] array)
   return result;
 }
 
+string[] filter(alias func)(string[] array)
+{
+  string[] result;
+
+  foreach (e; array)
+    if (func(e))
+      result ~= e;
+
+  return result;
+}
+
 string join(string[] input, string element)
 {
   string result;
@@ -101,6 +134,36 @@ string join(string[] input, string element)
     if (i < input.length - 1)
       result ~= element;
   }
+
+  return result;
+}
+
+bool startsWith(string value, string prefix)
+{
+  return value.length >= prefix.length && value[0 .. prefix.length] == prefix;
+}
+
+bool endsWith(string value, string suffix)
+{
+  return value.length >= suffix.length && value[$ - suffix.length .. $] == suffix;
+}
+
+string removePrefix(string value, string prefix)
+{
+  return value.startsWith(prefix) ? value[prefix.length .. $] : value;
+}
+
+string removeSuffix(string value, string suffix)
+{
+  return value.endsWith(suffix) ? value[0 .. $ - suffix.length] : value;
+}
+
+string replace(string value, char existing, char replacement)
+{
+  string result;
+
+  foreach (char c; value)
+    result ~= c == existing ? replacement : c;
 
   return result;
 }

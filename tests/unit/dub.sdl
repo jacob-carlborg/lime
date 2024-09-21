@@ -7,4 +7,6 @@ license "BSL-1.0"
 dependency "lime:core" path="../../"
 
 dflags "-Jresources"
-preBuildCommands "find source/ -name '*.d' | sed 's#source//##' | sed 's#\\.d$$##g' | sed 's#/#.#g' | grep -v main > resources/imports.txt"
+
+preBuildCommands "$DUB_EXE describe --import-paths > resources/import_paths.txt"
+preBuildCommands "$DUB_EXE describe --data=source-files --data-list > resources/source_files.txt"
