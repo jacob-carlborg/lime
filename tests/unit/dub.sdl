@@ -5,8 +5,14 @@ copyright "Copyright © 2024, Jacob Carlborg"
 license "BSL-1.0"
 
 dependency "lime:core" path="../../"
+dependency "lime:config" path="../../"
+dependency "support" path="../support"
 
 dflags "-Jresources"
+lflags "utility.o"
+libs "c++"
+extraDependencyFiles "cpp_source/utility.cpp"
 
+preBuildCommands "cc -std=c++26 -c cpp_source/utility.cpp -o utility.o"
 preBuildCommands "$DUB_EXE describe --import-paths > resources/import_paths.txt"
 preBuildCommands "$DUB_EXE describe --data=source-files --data-list > resources/source_files.txt"

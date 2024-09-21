@@ -9,10 +9,17 @@ mixin(imports);
 
 mixin("alias modules = AliasSeq!(" ~ moduleData.join(",\n") ~ ");");
 
+extern (C++) void runTestFromCPP(Test test);
+
+extern (C++) void runTestFromD(Test test)
+{
+  test();
+}
+
 extern (C) int main(int argc, const char** argv)
 {
   foreach (test; tests)
-    test();
+    runTestFromCPP(test);
 
   return 0;
 }
