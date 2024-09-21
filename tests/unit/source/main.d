@@ -9,7 +9,7 @@ mixin(imports);
 
 mixin("alias modules = AliasSeq!(" ~ moduleData.join(",\n") ~ ");");
 
-extern (C++) void runTestFromCPP(Test test);
+extern (C++) bool runTestFromCPP(Test test);
 
 extern (C++) void runTestFromD(Test test)
 {
@@ -18,15 +18,24 @@ extern (C++) void runTestFromD(Test test)
 
 extern (C) int main(int argc, const char** argv)
 {
-  foreach (test; tests)
-    runTestFromCPP(test);
+  auto tests = .tests;
 
-  return 0;
+  foreach (ref test; tests)
+    test.pass = runTestFromCPP(test);
+
+  int failedTestCount = 0;
+
+  foreach (test; tests)
+    if (!test.pass)
+      failedTestCount++;
+
+  return failedTestCount > 0 ? 1 : 0;
 }
 
 struct Test
 {
   void function() implementation;
+  bool pass;
 
   this(void function() implementation)
   {

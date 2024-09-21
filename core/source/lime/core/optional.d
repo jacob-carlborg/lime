@@ -97,6 +97,7 @@ struct Optional(T)
             return present;
     }
 
+    ///
     unittest
     {
         Optional!int a = 3;
@@ -333,17 +334,6 @@ enum isNullable(T) =
   __traits(isAssociativeArray, T) ||
   isDynamicArray!T ||
   isPointer!T;
-
-///
-unittest
-{
-    // assert(isNullable!Object);
-    // assert(isNullable!(Object.Monitor));
-    // assert(isNullable!(void function()));
-    // assert(isNullable!(void delegate()));
-    // assert(isNullable!(int*));
-    // assert(!isNullable!int);
-}
 
 template Unqual(T : const U, U)
 {

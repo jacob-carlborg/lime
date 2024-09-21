@@ -33,6 +33,7 @@ struct Test
 {
 private:
   void* implementation;
+  bool pass;
 };
 
 class AssertError : public exception
@@ -59,17 +60,20 @@ public:
 
 void runTestFromD(Test test);
 
-void runTestFromCPP(Test test)
+bool runTestFromCPP(Test test)
 {
   try
   {
    runTestFromD(test);
+   return true;
   }
 
   catch (AssertError& error)
   {
     fprintf(stderr, "%s\n", error.message().c_str());
     fflush(stderr);
+
+    return false;
   }
 }
 
