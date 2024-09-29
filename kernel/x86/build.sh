@@ -2,13 +2,27 @@
 
 set -e
 
+if [ -s "$HOME/.dvm/scripts/dvm" ] ; then
+  . "$HOME/.dvm/scripts/dvm" ;
+  dvm use ldc-1.39.0
+fi
+
 clang \
-  -ffreestanding \
-    -Wall -Wextra \
-    -c \
-    -nostdlib \
-    -target i386-freestanding \
-    kernel.c boot.asm
+  -Wall -Wextra \
+  -c \
+  -nostdlib \
+  -o boot.o \
+  -target i386-freestanding \
+  boot.asm
+
+ldc2 \
+  -c \
+  -ofkernel.o \
+  -mtriple i386-freestanding \
+  --defaultlib= \
+  --fno-moduleinfo \
+  -g \
+  kernel.d
 
 ../ld.lld \
   -T link.ld \
