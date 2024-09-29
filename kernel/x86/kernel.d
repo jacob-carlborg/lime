@@ -1,3 +1,21 @@
+import ldc.attributes;
+
+struct MultibootHeader
+{
+  enum Flags : int
+  {
+    align_ = 1 << 0, // align loaded modules on page boundaries
+    meminfo = 1 << 1 // provide memory map
+  }
+
+  private enum selectedFlags = Flags.align_ | Flags.meminfo;
+  private enum magicNumber = 0x1BADB002;
+
+  int magic = magicNumber; // 'magic number' lets bootloader find the header
+  int flags = selectedFlags; //  this is the Multiboot 'flag' field
+  int checksum = -(magicNumber + selectedFlags); // checksum of above, to prove we are multiboot
+}
+
 enum color
 {
   BLACK = 0,
@@ -10,7 +28,38 @@ enum size
   ROWS = 25
 }
 
-__gshared ushort* video = cast(ushort*) 0xB8000;
+@section("multiboot") __gshared MultibootHeader multibootHeader;
+@section("bss") align(16) __gshared ubyte[16384] stack; // 16 KiB
+
+__gshared auto video = cast(ushort*) 0xB8000;
+
+extern (C) noreturn _start()
+{
+  asm
+  {
+    "mov %0, %%esp" : : "r" (&stack[$ - 1]);
+  }
+
+  kernel_main();
+
+  asm
+  {
+    q"ASM
+      cli
+1:    hlt
+      jmp 1b
+ASM";
+  }
+
+  while (true) {}
+}
+
+noreturn kernel_main()
+{
+  clear(color.BLACK);
+  puts(0, 0, color.BRIGHT, color.BLACK, "hello world");
+  while (true) {}
+}
 
 void putc(ubyte x, ubyte y, color fg, color bg, char c)
 {
@@ -30,11 +79,4 @@ void clear(color bg)
   for (y = 0; y < size.ROWS; y++)
     for (x = 0; x < size.COLS; x++)
       putc(x, y, bg, bg, ' ');
-}
-
-extern (C) noreturn kernel_main()
-{
-  clear(color.BLACK);
-  puts(0, 0, color.BRIGHT, color.BLACK, "hello world");
-  while (1) {}
 }

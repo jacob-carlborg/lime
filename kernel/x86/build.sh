@@ -7,19 +7,10 @@ if [ -s "$HOME/.dvm/scripts/dvm" ] ; then
   dvm use ldc-1.39.0
 fi
 
-clang \
-  -Wall -Wextra \
-  -c \
-  -nostdlib \
-  -o boot.o \
-  -target i386-freestanding \
-  boot.asm
-
 ldc2 \
   -c \
   -ofkernel.o \
   -mtriple i386-freestanding \
-  --defaultlib= \
   --fno-moduleinfo \
   -g \
   kernel.d
@@ -28,4 +19,15 @@ ldc2 \
   -T link.ld \
   -o kernel.bin \
   -m elf_i386 \
-  kernel.o boot.o
+  kernel.o
+
+# ldc2 \
+#   -ofkernel.bin \
+#   -mtriple i386-freestanding \
+#   --fno-moduleinfo \
+#   --defaultlib= \
+#   --link-internally \
+#   -L-m -Lelf_i386 \
+#   -L-T -Llink.ld -v \
+#   -L--no-gc-sections \
+#   kernel.d

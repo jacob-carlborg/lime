@@ -4,7 +4,7 @@ SECTIONS
 {
   . = 2M; /* Load kernel at 2MB */
 
-  .text :
+  .text : ALIGN(4K)
   {
     *(.multiboot)
     *(.text)
