@@ -2,18 +2,20 @@ import ldc.attributes;
 
 struct MultibootHeader
 {
+  int magic = magicNumber; // 'magic number' lets bootloader find the header
+  int flags = selectedFlags; //  this is the Multiboot 'flag' field
+  int checksum = -(magicNumber + selectedFlags); // checksum of above, to prove we are multiboot
+
+private:
+
   enum Flags : int
   {
     align_ = 1 << 0, // align loaded modules on page boundaries
     meminfo = 1 << 1 // provide memory map
   }
 
-  private enum selectedFlags = Flags.align_ | Flags.meminfo;
-  private enum magicNumber = 0x1BADB002;
-
-  int magic = magicNumber; // 'magic number' lets bootloader find the header
-  int flags = selectedFlags; //  this is the Multiboot 'flag' field
-  int checksum = -(magicNumber + selectedFlags); // checksum of above, to prove we are multiboot
+  enum selectedFlags = Flags.align_ | Flags.meminfo;
+  enum magicNumber = 0x1BADB002;
 }
 
 enum color
@@ -33,7 +35,7 @@ enum size
 
 __gshared auto video = cast(ushort*) 0xB8000;
 
-extern (C) noreturn _start()
+@naked extern (C) noreturn _start()
 {
   asm
   {
