@@ -14,5 +14,6 @@ script
 *.o
 *.obj
 *.lst
+*.bin
 test_runner.sh
 /tools/generate_test_scripts
