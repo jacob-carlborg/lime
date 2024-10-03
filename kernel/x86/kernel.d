@@ -35,7 +35,7 @@ enum size
 
 __gshared auto video = cast(ushort*) 0xB8000;
 
-@naked extern (C) noreturn _start()
+@optStrategy("none") @naked extern (C) noreturn _start()
 {
   asm
   {
@@ -44,16 +44,10 @@ __gshared auto video = cast(ushort*) 0xB8000;
 
   kernel_main();
 
-  asm
-  {
-    q"ASM
-      cli
-1:    hlt
-      jmp 1b
-ASM";
-  }
+  asm { "cli"; }
 
-  while (true) {}
+  while (true)
+    asm { "hlt"; }
 }
 
 noreturn kernel_main()
