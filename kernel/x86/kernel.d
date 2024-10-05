@@ -18,24 +18,12 @@ private:
   enum magicNumber = 0x1BADB002;
 }
 
-enum color
-{
-  BLACK = 0,
-  BRIGHT = 7
-}
-
-enum size
-{
-  COLS = 80,
-  ROWS = 25
-}
+enum qemuDebugConIOPort = 0xE9;
 
 @section("multiboot") __gshared MultibootHeader multibootHeader;
 @section("bss") align(16) __gshared ubyte[16384] stack; // 16 KiB
 
-__gshared auto video = cast(ushort*) 0xB8000;
-
-@optStrategy("none") @naked extern (C) noreturn _start()
+@optStrategy("none") @naked extern (C) void _start()
 {
   asm
   {
@@ -50,29 +38,36 @@ __gshared auto video = cast(ushort*) 0xB8000;
     asm { "hlt"; }
 }
 
-noreturn kernel_main()
+void write(string data, ushort toIOPort)
 {
-  clear(color.BLACK);
-  puts(0, 0, color.BRIGHT, color.BLACK, "hello world");
+  auto ptr = data.ptr;
+  alias address = toIOPort;
+
+  asm
+  {
+q"ASM
+    movw %0, %%dx
+    movl %1, %%esi
+    movl %2, %%ecx
+    cld
+    rep
+    outsb (%%esi), %%dx
+ASM"
+    : : "r" (address), "m" (ptr), "r" (data.length);
+  }
+}
+
+void writeLine(string data, ushort toIOPort)
+{
+  alias address = toIOPort;
+
+  write(data, toIOPort: address);
+  write("\n", toIOPort: address);
+}
+
+void kernel_main()
+{
+  writeLine("foo", toIOPort: qemuDebugConIOPort);
+
   while (true) {}
-}
-
-void putc(ubyte x, ubyte y, color fg, color bg, char c)
-{
-  video[y * size.COLS + x] = cast(ushort) ((bg << 12) | (fg << 8) | c);
-}
-
-void puts(ubyte x, ubyte y, color fg, color bg, const(char)* s)
-{
-  for (; *s; s++, x++)
-    putc(x, y, fg, bg, *s);
-}
-
-void clear(color bg)
-{
-  ubyte x;
-  ubyte y;
-  for (y = 0; y < size.ROWS; y++)
-    for (x = 0; x < size.COLS; x++)
-      putc(x, y, bg, bg, ' ');
 }
