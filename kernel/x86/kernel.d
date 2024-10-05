@@ -40,20 +40,16 @@ enum qemuDebugConIOPort = 0xE9;
 
 void write(string data, ushort toIOPort)
 {
-  auto ptr = data.ptr;
   alias address = toIOPort;
 
   asm
   {
 q"ASM
-    movw %0, %%dx
-    movl %1, %%esi
-    movl %2, %%ecx
     cld
     rep
-    outsb (%%esi), %%dx
+    outsb
 ASM"
-    : : "r" (address), "m" (ptr), "r" (data.length);
+      : : "S" (data.ptr), "c" (data.length), "d" (address);
   }
 }
 
