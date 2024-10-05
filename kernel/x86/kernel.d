@@ -38,10 +38,8 @@ enum qemuDebugConIOPort = 0xE9;
     asm { "hlt"; }
 }
 
-void write(string data, ushort toIOPort)
+void write(ushort ioPort, string data)
 {
-  alias address = toIOPort;
-
   asm
   {
 q"ASM
@@ -49,21 +47,19 @@ q"ASM
     rep
     outsb
 ASM"
-      : : "S" (data.ptr), "c" (data.length), "d" (address);
+      : : "S" (data.ptr), "c" (data.length), "d" (ioPort);
   }
 }
 
-void writeLine(string data, ushort toIOPort)
+void writeLine(ushort ioPort, string data)
 {
-  alias address = toIOPort;
-
-  write(data, toIOPort: address);
-  write("\n", toIOPort: address);
+  ioPort.write(data);
+  ioPort.write("\n");
 }
 
 void kernel_main()
 {
-  writeLine("foo", toIOPort: qemuDebugConIOPort);
+  qemuDebugConIOPort.writeLine("asd");
 
   while (true) {}
 }
