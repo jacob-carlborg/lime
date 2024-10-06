@@ -57,7 +57,7 @@ void writeLine(ushort ioPort, string data)
   ioPort.write("\n");
 }
 
-void kernel_main()
+noreturn kernel_main()
 {
   qemuDebugConIOPort.writeLine("asd");
 
