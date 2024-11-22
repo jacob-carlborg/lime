@@ -13,3 +13,7 @@ subPackage "config"
 subPackage "core"
 
 targetType "sourceLibrary"
+
+configuration "phobos-compatibility" {
+  subConfiguration ":core" "phobos-compatibility"
+}
