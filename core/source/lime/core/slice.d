@@ -2,6 +2,7 @@
 module lime.core.slice;
 
 import lime.core.attributes;
+import lime.core.core;
 
 pure nothrow @safe @nogc:
 
