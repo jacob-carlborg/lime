@@ -175,33 +175,27 @@ struct Optional(T)
 
     auto ref opDispatch(string name, Args...)(auto ref Args args)
     {
-        alias PointerTarget(T : T*) = T;
-
-        static if (isPointer!T)
-            alias StoredType = PointerTarget!T;
-        else
-            alias StoredType = T;
+        alias StoredType = PointerTarget!T;
 
         static if (is(StoredType == class) || is(StoredType == struct))
         {
             static if (hasField!(StoredType, name))
-            {
-                alias FieldType = typeof(__traits(getMember, StoredType, name));
-
-                if (isPresent)
-                    return optional(__traits(getMember, value, name));
-                else
-                    return none!FieldType;
-            }
+                auto ref expression() => __traits(getMember, value, name);
             else
-            {
-                alias ReturnType = typeof(__traits(getMember, value, name)(args));
+                auto ref expression() => __traits(getMember, value, name)(args);
 
-                if (isPresent)
-                    return optional(__traits(getMember, value, name)(args));
+            alias ResultType = typeof(expression());
+            alias UnwrappedType = UnwrapOptional!ResultType;
+
+            auto ref result()
+            {
+                static if (isInstanceOf!(.Optional, ResultType))
+                    return expression;
                 else
-                    return none!ReturnType;
+                    return some(expression);
             }
+
+            return isPresent ? result : none!UnwrappedType;
         }
         else
             return optional(__traits(getMember, value, name));
@@ -214,7 +208,7 @@ struct Optional(T)
         assert(Optional!Foo(Foo(3)).a.get == 3);
         assert(Optional!Foo.init.a.empty);
 
-        assert(Optional!Foo(Foo()).opDispatch!"c"(4).get == 4);
+        assert(Optional!Foo(Foo()).c(4).get == 4);
         assert(Optional!Foo.init.c(4).empty);
 
         auto bar = Bar(5);
@@ -325,6 +319,15 @@ private:
 enum isDynamicArray(T) = is(T == U[], U);
 enum isPointer(T) = is(T == U*, U);
 
+enum isInstanceOf(alias S, T) = is(T == S!Args, Args...);
+
+template isInstanceOf(alias S, alias T)
+{
+    enum impl(alias T : S!Args, Args...) = true;
+    enum impl(alias T) = false;
+    enum isInstanceOf = impl!T;
+}
+
 /// Evaluates to `true` if the given type can hold `null`.
 enum isNullable(T) =
   is(T == class) ||
@@ -353,3 +356,9 @@ bool hasField(T, string field)()
 
     return false;
 }
+
+alias UnwrapOptional(alias T : Optional!Arg, Arg) = Arg;
+alias UnwrapOptional(T) = T;
+
+alias PointerTarget(T : T*) = T;
+alias PointerTarget(T) = T;
