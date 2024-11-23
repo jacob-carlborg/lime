@@ -173,6 +173,22 @@ struct Optional(T)
         assert(b.length == 0);
     }
 
+    Optional!R map(R)(scope R delegate(T) operation)
+    {
+        return isPresent ? operation(value).some : none!R;
+    }
+
+    ///
+    unittest
+    {
+        Optional!int a = 3;
+        assert(a.map(e => e * 2).or(0) == 6);
+        assert(a.map(e => "foo").or("") == "foo");
+
+        Optional!int b = none;
+        assert(a.map(e => e * 2).or(0) == 0);
+    }
+
     auto ref opDispatch(string name, Args...)(auto ref Args args)
     {
         alias StoredType = PointerTarget!T;
