@@ -121,6 +121,7 @@ jobs:
             compiler: ldc-latest
             arch: mips64el
             docker_arch: mips64le
+            docker_image: debian:12-slim
 
           - data:
               os:
@@ -228,7 +229,7 @@ jobs:
             -w ${{ github.workspace }} \
             -e LIME_CROSS_COMPILE=${{ env.LIME_CROSS_COMPILE }} \
             --platform linux/${{ matrix.docker_arch || matrix.arch }} \
-            debian:unstable-slim \
+            ${{ matrix.docker_image || 'debian:unstable-slim' }} \
             ./.github/workflows/ci.sh
 
       # - name: Debug
