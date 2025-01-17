@@ -18,220 +18,228 @@ defaults:
     shell: bash
 
 jobs:
-  test:
-    name: ${{ matrix.arch }}-${{ matrix.data.os.target }}${{ matrix.data.os.version }} ${{ matrix.compiler }}
-    runs-on: ${{ matrix.data.os.host }}
-    continue-on-error: ${{ matrix.nightly == 'nightly' }}
-    env:
-      LIME_ARCH: ${{ matrix.arch }}
-      LIME_COMPILER: ${{ matrix.compiler }}
-      LIME_CROSS_COMPILE: ${{ matrix.data.cross_compile }}
-      LIME_OS: ${{ matrix.data.os.target }}
-      LIME_OS_VERSION: ${{ matrix.data.os.version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [ldc-latest]
-        arch: [x86_64]
-        data:
-          - os:
-              target: macos
-              host: macOS-13
+  # test:
+  #   name: ${{ matrix.arch }}-${{ matrix.data.os.target }}${{ matrix.data.os.version }} ${{ matrix.compiler }}
+  #   runs-on: ${{ matrix.data.os.host }}
+  #   continue-on-error: ${{ matrix.nightly == 'nightly' }}
+  #   env:
+  #     LIME_ARCH: ${{ matrix.arch }}
+  #     LIME_COMPILER: ${{ matrix.compiler }}
+  #     LIME_CROSS_COMPILE: ${{ matrix.data.cross_compile }}
+  #     LIME_OS: ${{ matrix.data.os.target }}
+  #     LIME_OS_VERSION: ${{ matrix.data.os.version }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       compiler: [ldc-latest]
+  #       arch: [x86_64]
+  #       data:
+  #         - os:
+  #             target: macos
+  #             host: macOS-13
+  #
+  #         - os:
+  #             target: linux
+  #             host: ubuntu-latest
+  #
+  #         # Temporarily disabled
+  #         # - os:
+  #         #     target: windows
+  #         #     host: windows-latest
+  #
+  #         - os:
+  #             target: freebsd
+  #             host: ubuntu-latest
+  #             version: '14.0'
+  #           cross_platform_actions: true
+  #           cross_compile: true
+  #
+  #         - os:
+  #             target: openbsd
+  #             host: ubuntu-latest
+  #             version: '7.4'
+  #           cross_platform_actions: true
+  #           cross_compile: true
+  #
+  #         - os:
+  #             target: netbsd
+  #             host: ubuntu-latest
+  #             version: '10.0'
+  #           cross_platform_actions: true
+  #           cross_compile: true
+  #
+  #       include:
+  #         - data:
+  #             os:
+  #               target: macos
+  #               host: macOS-latest
+  #           compiler: ldc-latest
+  #           arch: arm64
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #             cross_compile: true
+  #             docker: true
+  #           compiler: ldc-latest
+  #           arch: arm64
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #             cross_compile: true
+  #             docker: true
+  #           compiler: ldc-latest
+  #           arch: ppc64le
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #             cross_compile: true
+  #             docker: true
+  #           compiler: ldc-latest
+  #           arch: riscv64
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #             cross_compile: true
+  #             docker: true
+  #           compiler: ldc-latest
+  #           arch: s390x
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #             cross_compile: true
+  #             docker: true
+  #           compiler: ldc-latest
+  #           arch: mips64el
+  #           docker_arch: mips64le
+  #           docker_image: debian:12-slim
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #             cross_compile: true
+  #             docker: true
+  #           compiler: ldc-latest
+  #           arch: i386
+  #           docker_arch: 386
+  #
+  #         # Temporarily disabled
+  #         # - data:
+  #         #     os:
+  #         #       target: windows
+  #         #       host: windows-latest
+  #         #   compiler: ldc-latest
+  #         #   arch: i386
+  #
+  #         - data:
+  #             os:
+  #               target: openbsd
+  #               host: ubuntu-latest
+  #               version: '7.4'
+  #             cross_platform_actions: true
+  #             cross_compile: true
+  #           compiler: ldc-latest
+  #           arch: arm64
+  #
+  #         - data:
+  #             os:
+  #               target: freebsd
+  #               host: ubuntu-latest
+  #               version: '14.0'
+  #             cross_platform_actions: true
+  #             cross_compile: true
+  #           compiler: ldc-latest
+  #           arch: arm64
+  #
+  #         - data:
+  #             os:
+  #               target: netbsd
+  #               host: ubuntu-latest
+  #               version: '10.0'
+  #             cross_platform_actions: true
+  #             cross_compile: true
+  #           compiler: ldc-latest
+  #           arch: arm64
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #           compiler: ldc-beta
+  #           arch: x86_64
+  #
+  #         - data:
+  #             os:
+  #               target: linux
+  #               host: ubuntu-latest
+  #           compiler: ldc-master
+  #           arch: x86_64
+  #           nightly: nightly
+  #
+  #   steps:
+  #     - name: Clone Repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         persist-credentials: false
+  #
+  #     # - name: Setup tmate session
+  #     #   uses: mxschmitt/action-tmate@v3
+  #
+  #     - name: Test
+  #       if: ${{ !matrix.data.cross_platform_actions && !matrix.data.docker }}
+  #       run: ./.github/workflows/ci.sh
+  #
+  #     - name: Build Tests
+  #       if: ${{ matrix.data.cross_compile }}
+  #       run: ./.github/workflows/build_tests.sh
+  #
+  #     - name: Run Tests in VM
+  #       if: ${{ matrix.data.cross_platform_actions }}
+  #       uses: cross-platform-actions/action@v0.24.0
+  #       with:
+  #         shell: bash
+  #         operating_system: ${{ matrix.data.os.target }}
+  #         architecture: ${{ matrix.arch }}
+  #         version: ${{ matrix.data.os.version }}
+  #         environment_variables: LIME_CROSS_COMPILE
+  #         run: ./.github/workflows/ci.sh
+  #
+  #     - name: Set up QEMU
+  #       if: ${{ matrix.data.docker }}
+  #       uses: docker/setup-qemu-action@v3
+  #       with:
+  #         platforms: ${{ matrix.docker_arch }}
+  #
+  #     - name: Run Tests in Docker
+  #       if: ${{ matrix.data.docker }}
+  #       run: |
+  #         docker run \
+  #           --rm \
+  #           -v $(pwd):/${{ github.workspace }} \
+  #           -w ${{ github.workspace }} \
+  #           -e LIME_CROSS_COMPILE=${{ env.LIME_CROSS_COMPILE }} \
+  #           --platform linux/${{ matrix.docker_arch || matrix.arch }} \
+  #           ${{ matrix.docker_image || 'debian:unstable-slim' }} \
+  #           ./.github/workflows/ci.sh
+  #
+  #     # - name: Debug
+  #     #   if: ${{ failure() }}
+  #     #   run: cat config/temp/mixin.d
 
-          - os:
-              target: linux
-              host: ubuntu-latest
-
-          # Temporarily disabled
-          # - os:
-          #     target: windows
-          #     host: windows-latest
-
-          - os:
-              target: freebsd
-              host: ubuntu-latest
-              version: '14.0'
-            cross_platform_actions: true
-            cross_compile: true
-
-          - os:
-              target: openbsd
-              host: ubuntu-latest
-              version: '7.4'
-            cross_platform_actions: true
-            cross_compile: true
-
-          - os:
-              target: netbsd
-              host: ubuntu-latest
-              version: '10.0'
-            cross_platform_actions: true
-            cross_compile: true
-
-        include:
-          - data:
-              os:
-                target: macos
-                host: macOS-latest
-            compiler: ldc-latest
-            arch: arm64
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-              cross_compile: true
-              docker: true
-            compiler: ldc-latest
-            arch: arm64
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-              cross_compile: true
-              docker: true
-            compiler: ldc-latest
-            arch: ppc64le
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-              cross_compile: true
-              docker: true
-            compiler: ldc-latest
-            arch: riscv64
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-              cross_compile: true
-              docker: true
-            compiler: ldc-latest
-            arch: s390x
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-              cross_compile: true
-              docker: true
-            compiler: ldc-latest
-            arch: mips64el
-            docker_arch: mips64le
-            docker_image: debian:12-slim
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-              cross_compile: true
-              docker: true
-            compiler: ldc-latest
-            arch: i386
-            docker_arch: 386
-
-          # Temporarily disabled
-          # - data:
-          #     os:
-          #       target: windows
-          #       host: windows-latest
-          #   compiler: ldc-latest
-          #   arch: i386
-
-          - data:
-              os:
-                target: openbsd
-                host: ubuntu-latest
-                version: '7.4'
-              cross_platform_actions: true
-              cross_compile: true
-            compiler: ldc-latest
-            arch: arm64
-
-          - data:
-              os:
-                target: freebsd
-                host: ubuntu-latest
-                version: '14.0'
-              cross_platform_actions: true
-              cross_compile: true
-            compiler: ldc-latest
-            arch: arm64
-
-          - data:
-              os:
-                target: netbsd
-                host: ubuntu-latest
-                version: '10.0'
-              cross_platform_actions: true
-              cross_compile: true
-            compiler: ldc-latest
-            arch: arm64
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-            compiler: ldc-beta
-            arch: x86_64
-
-          - data:
-              os:
-                target: linux
-                host: ubuntu-latest
-            compiler: ldc-master
-            arch: x86_64
-            nightly: nightly
-
+  arm64_runners:
+    runs-on: ubuntu-24.04-arm
     steps:
-      - name: Clone Repository
-        uses: actions/checkout@v4
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
         with:
-          persist-credentials: false
-
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-
-      - name: Test
-        if: ${{ !matrix.data.cross_platform_actions && !matrix.data.docker }}
-        run: ./.github/workflows/ci.sh
-
-      - name: Build Tests
-        if: ${{ matrix.data.cross_compile }}
-        run: ./.github/workflows/build_tests.sh
-
-      - name: Run Tests in VM
-        if: ${{ matrix.data.cross_platform_actions }}
-        uses: cross-platform-actions/action@v0.24.0
-        with:
-          shell: bash
-          operating_system: ${{ matrix.data.os.target }}
-          architecture: ${{ matrix.arch }}
-          version: ${{ matrix.data.os.version }}
-          environment_variables: LIME_CROSS_COMPILE
-          run: ./.github/workflows/ci.sh
-
-      - name: Set up QEMU
-        if: ${{ matrix.data.docker }}
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.docker_arch }}
-
-      - name: Run Tests in Docker
-        if: ${{ matrix.data.docker }}
-        run: |
-          docker run \
-            --rm \
-            -v $(pwd):/${{ github.workspace }} \
-            -w ${{ github.workspace }} \
-            -e LIME_CROSS_COMPILE=${{ env.LIME_CROSS_COMPILE }} \
-            --platform linux/${{ matrix.docker_arch || matrix.arch }} \
-            ${{ matrix.docker_image || 'debian:unstable-slim' }} \
-            ./.github/workflows/ci.sh
-
-      # - name: Debug
-      #   if: ${{ failure() }}
-      #   run: cat config/temp/mixin.d
+          limit-access-to-actor: true
