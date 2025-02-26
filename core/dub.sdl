@@ -24,4 +24,5 @@ configuration "library" {
 }
 
 configuration "phobos-compatibility" {
+  excludedSourceFiles "source/lime/core/internal/compiler_hooks.d"
 }
