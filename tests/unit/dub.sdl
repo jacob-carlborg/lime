@@ -8,6 +8,7 @@ dependency "lime:core" path="../../"
 dependency "lime:config" path="../../"
 dependency "support" path="../support"
 
+buildRequirements "allowWarnings" platform="linux"
 dflags "-Jresources"
 lflags "utility.o"
 libs "c++" platform="osx"

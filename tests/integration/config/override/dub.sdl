@@ -7,3 +7,4 @@ license "BSL-1.0"
 dependency "plugin_package" path="./plugin_package"
 
 buildOptions "betterC"
+buildRequirements "allowWarnings" platform="linux"

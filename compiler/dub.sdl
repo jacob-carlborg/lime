@@ -5,3 +5,4 @@ copyright "Copyright © 2024, Jacob Carlborg"
 license "BSL-1.0"
 
 targetType "sourceLibrary"
+buildRequirements "allowWarnings" platform="linux"

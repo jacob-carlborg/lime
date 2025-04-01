@@ -7,3 +7,4 @@ license "BSL-1.0"
 dependency "lime:config" path="../../../.."
 
 buildOptions "betterC"
+buildRequirements "allowWarnings" platform="linux"

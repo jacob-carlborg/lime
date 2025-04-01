@@ -7,3 +7,5 @@ license "BSL-1.0"
 dependency "lime:core" path="../../../../../"
 dependency "lime:config" path="../../../../.."
 dependency "support" path="../../../../support"
+
+buildRequirements "allowWarnings" platform="linux"

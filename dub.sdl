@@ -13,6 +13,7 @@ subPackage "config"
 subPackage "core"
 
 targetType "sourceLibrary"
+buildRequirements "allowWarnings" platform="linux"
 
 configuration "phobos-compatibility" {
   subConfiguration ":core" "phobos-compatibility"
